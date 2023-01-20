@@ -40,6 +40,9 @@ const DistributorSchema = new mongoose.Schema({
     type:String,
     required:true
   },
+  username:{
+    type:String,
+  },
   schools:[],
   date: { type: Date, default: Date.now },
   role:{

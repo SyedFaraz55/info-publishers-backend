@@ -11,9 +11,54 @@ const { Subject } = require("../Schemas/Subjects");
 const { Lessons } = require("../Schemas/Lessons");
 const { School } = require("../Schemas/School");
 const { Student } = require("../Schemas/Student");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const { uploadFile } = require("../s3");
+const { Notice } = require("../Schemas/Notices");
 
 router.get("/", async (req, res) => {
   return res.send(200);
+});
+
+router.post("/notice", async (req, res) => {
+  try {
+    const r = new Notice(req.body);
+    r.save();
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    return res.status(200).json({ ok: false });
+  }
+});
+
+router.post("/get-notice", async (req, res) => {
+  try {
+    const r = await Notice.find({ role: req.body.role });
+    return res.status(200).json({ ok: true, data: r });
+  } catch (err) {
+    return res.status(200).json({ ok: false });
+  }
+});
+
+router.get("/get-notices", async (req, res) => {
+  try {
+    const r = await Notice.find({});
+    return res.status(200).json({ ok: true, data: r });
+  } catch (err) {
+    return res.status(200).json({ ok: false });
+  }
+});
+
+router.post("/delete-notices", async (req, res) => {
+  try {
+    const r = await Notice.deleteOne({ _id: req.body.id });
+    if (r.deletedCount > 0) {
+      return res.status(200).json({ ok: true });
+    } else {
+      return res.status(200).json({ ok: false });
+    }
+  } catch (err) {
+    return res.status(200).json({ ok: false });
+  }
 });
 
 router.post("/add-user", async (req, res) => {
@@ -220,25 +265,31 @@ router.post("/add-subject", async (req, res) => {
 });
 
 router.post("/get-subjects", async (req, res) => {
-  const result = await Subject.find()
+  const result = await Subject.find();
 
   return res.status(200).json({ ok: true, result });
 });
 
 router.post("/delete-school", async (req, res) => {
-  const result = await School.deleteOne({_id:req.body.id})
-  console.log(result)
+  const result = await School.deleteOne({ _id: req.body.id });
+  console.log(result);
   return res.status(200).json({ ok: true, result });
 });
 
 router.get("/get-schools", async (req, res) => {
-  const result = await School.find()
+  const result = await School.find();
 
   return res.status(200).json({ ok: true, result });
 });
 
 router.post("/getSchoolsById", async (req, res) => {
-  const result = await School.find({distId:req.body.id})
+  const result = await School.find({ distId: req.body.id });
+
+  return res.status(200).json({ ok: true, result });
+});
+
+router.post("/getLessonsById", async (req, res) => {
+  const result = await Lessons.find({ id: req.body.id });
 
   return res.status(200).json({ ok: true, result });
 });
@@ -248,6 +299,17 @@ router.post("/add-lessons", async (req, res) => {
   await result.save();
 
   return res.status(200).json({ ok: true, message: "Lessons added" });
+});
+
+router.get("/get-lessons", async (req, res) => {
+  try {
+    const result = await Lessons.find({});
+    return res.status(200).json({ ok: true, data: result });
+  } catch (err) {
+    return res
+      .status(200)
+      .json({ ok: false, message: "failed to add lessons" });
+  }
 });
 
 router.post("/add-school", async (req, res) => {
@@ -260,13 +322,36 @@ router.post("/add-school", async (req, res) => {
 });
 
 router.post("/add-student", async (req, res) => {
-  const result = new Student(req.body);
-  const salt = await bcrypt.genSalt(10);
-  result.password = await bcrypt.hash(result.password, salt);
-  await result.save();
+  try {
+    const result = new Student(req.body);
+    const salt = await bcrypt.genSalt(10);
+    result.password = await bcrypt.hash(result.password, salt);
+    await result.save();
 
-  return res.status(200).json({ ok: true, message: "Student added" });
+    return res.status(200).json({ ok: true, message: "Student added" });
+  } catch (err) {
+    return res.status(200).json({ ok: false });
+  }
 });
+
+router.get("/get-student/:id", async (req, res) => {
+  try {
+    const result = await Student.find({ school: req.params.id });
+    return res.status(200).json({ ok: true, data: result });
+  } catch (err) {
+    return res.status(200).json({ ok: false });
+  }
+});
+
+router.get("/get-studentByClass/:id", async (req, res) => {
+  try {
+    const result = await Student.find({ standard: req.params.id });
+    return res.status(200).json({ ok: true, data: result });
+  } catch (err) {
+    return res.status(200).json({ ok: false });
+  }
+});
+
 
 router.post("/school-login", async (req, res) => {
   let result = await School.findOne({ mobile: req.body.mobile });
@@ -305,4 +390,15 @@ router.get("/get-series", async (req, res) => {
 
   return res.status(200).json({ ok: true, series });
 });
+
+router.post("/s3url", upload.single("file"), async (req, res) => {
+  console.log(req.files);
+  try {
+    const s = await uploadFile(req.file);
+    return res.send({ url: s.Location });
+  } catch (err) {
+    return res.send(err);
+  }
+});
+
 module.exports = router;

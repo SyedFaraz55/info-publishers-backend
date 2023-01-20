@@ -7,6 +7,9 @@ const SchoolSchema = new mongoose.Schema({
   distId: {
     type: String,
   },
+  schoolId: {
+    type: String,
+  },
   name: {
     type: String,
     minlength: 8,

@@ -9,6 +9,8 @@ const LessonSchema = new mongoose.Schema({
  },
  lessons:[{name:{type:String},sub:{type:Boolean},label:{type:String},subs:[{name:{type:String}}]}],
  date: { type: Date, default: Date.now },
+ link:String,
+ name:String
 });
 
 

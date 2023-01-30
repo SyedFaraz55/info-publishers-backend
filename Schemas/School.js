@@ -37,6 +37,7 @@ const SchoolSchema = new mongoose.Schema({
     type:String,
     required:true
   },
+  username:String,
 
   password:{
     type:String,
@@ -49,7 +50,11 @@ const SchoolSchema = new mongoose.Schema({
     type:String,
     default:2
   },
-  pending:{type:Boolean,default:true}
+  pending:{type:Boolean,default:true},
+  active:{
+    type:Boolean,
+    default:false
+  }
 });
 
 SchoolSchema.methods.generateAuthToken = function () {

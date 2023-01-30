@@ -7,9 +7,9 @@ const LessonSchema = new mongoose.Schema({
  id:{
     type:String
  },
- lessons:[{name:{type:String},sub:{type:Boolean},label:{type:String},subs:[{name:{type:String}}]}],
+ subs:[{name:String,link:String}],
  date: { type: Date, default: Date.now },
- link:String,
+
  name:String
 });
 

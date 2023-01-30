@@ -7,13 +7,10 @@ const DistributorSchema = new mongoose.Schema({
   firmName: {
     type: String,
     required: true,
-    minlength: 4,
-    maxlength: 50,
+
   },
   name: {
     type: String,
-    minlength: 8,
-    maxlength: 1024,
     required: true,
   },
   mobile:{
@@ -43,11 +40,15 @@ const DistributorSchema = new mongoose.Schema({
   username:{
     type:String,
   },
-  schools:[],
+  school:Number,
   date: { type: Date, default: Date.now },
   role:{
     type:String,
     default:1
+  },
+  active:{
+    type:Boolean,
+    default:false
   }
 });
 

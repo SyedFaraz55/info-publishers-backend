@@ -7,8 +7,12 @@ const SubjectSchema = new mongoose.Schema({
  id:{
     type:String
  },
- subjects:[{name:{type:String}}],
+ subject:String,
  date: { type: Date, default: Date.now },
+ active:{
+   type:Boolean,
+   default:false
+ }
 });
 
 

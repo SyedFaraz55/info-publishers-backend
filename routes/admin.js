@@ -280,14 +280,9 @@ router.post("/delete-class", async (req, res) => {
 });
 
 router.post("/delete-subject", async (req, res) => {
-  const ress = await Subject.updateOne(
-    { id: req.body.id },
-    {
-      $set: {
-        subjects: req.body.data,
-      },
-    }
-  );
+  console.log(req.body);
+
+  const ress = await Subject.deleteOne({ id: req.body.id });
   if (ress.deletedCount > 0) {
     return res.status(200).json({ ok: true, message: "Subject Deleted" });
   } else {

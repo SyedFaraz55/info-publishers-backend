@@ -66,6 +66,20 @@ router.post("/delete-notices", async (req, res) => {
   }
 });
 
+
+router.post("/delete-lesson", async (req, res) => {
+  try {
+    const r = await Lessons.deleteOne({ _id: req.body.id });
+    if (r.deletedCount > 0) {
+      return res.status(200).json({ ok: true });
+    } else {
+      return res.status(200).json({ ok: false });
+    }
+  } catch (err) {
+    return res.status(200).json({ ok: false });
+  }
+});
+
 router.post("/add-user", async (req, res) => {
   let admin = await Admin.findOne({ user: req.body.user });
   if (admin)

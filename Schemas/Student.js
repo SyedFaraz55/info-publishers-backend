@@ -15,7 +15,7 @@ const StudentSchema = new mongoose.Schema({
     password: { type: String },
     active: {
         type: Boolean,
-        default: false
+        default:true 
     },
     id:String,
     role:{

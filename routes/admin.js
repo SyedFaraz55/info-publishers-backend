@@ -224,8 +224,8 @@ router.get("/get-distById/:id", async (req, res) => {
 
 router.get("/get-stats", async (req, res) => {
   const schoolCount = await School.find().count();
-  const global = await Student.find({ standard: "63cecffbec0dc8c65f98b6e4" }).count();
-  const series = await Student.find({ standard: "63ced001ec0dc8c65f98b6e7" }).count();
+  const global = await Student.find({ standard: "63d7a5bb020dcc252e89fa80" }).count();
+  const series = await Student.find({ standard: "63d7a5c2020dcc252e89fa83" }).count();
   const assessment = await Assessment.find().count();
   const students = await Student.find({})
   return res.status(200).json({
@@ -239,10 +239,10 @@ router.get("/get-stats", async (req, res) => {
 });
 
 router.get("/get-stats/:id", async (req, res) => {
-  const schoolCount = await School.find({distId:req.params.id}).count();
+  const schoolCount = await School.find({ distId: req.params.id }).count();
   const global = await Student.find({ standard: "63cecffbec0dc8c65f98b6e4" }).count();
- const series = await Student.find({ standard: "63ced001ec0dc8c65f98b6e7" }).count();
- const students = await Student.find({id:req.params.id}).count();
+  const series = await Student.find({ standard: "63ced001ec0dc8c65f98b6e7" }).count();
+  const students = await Student.find({ id: req.params.id }).count();
   return res.status(200).json({
     ok: true, data: {
       schoolCount,
@@ -296,7 +296,7 @@ router.post("/delete-class", async (req, res) => {
 router.post("/delete-subject", async (req, res) => {
   console.log(req.body);
 
-  const ress = await Subject.deleteOne({ id: req.body.id });
+  const ress = await Subject.deleteOne({ _id: req.body.id });
   if (ress.deletedCount > 0) {
     return res.status(200).json({ ok: true, message: "Subject Deleted" });
   } else {
@@ -399,13 +399,13 @@ router.get("/get-year-plan", async (req, res) => {
 });
 
 router.post("/delete-year-plan", async (req, res) => {
-  const result = await YearPlan.deleteOne({_id:req.body.id});
-  if(result.deletedCount > 0 ) {
+  const result = await YearPlan.deleteOne({ _id: req.body.id });
+  if (result.deletedCount > 0) {
 
-  return res.status(200).json({ ok: true, message: "Year plan deleted"});
-  }else {
+    return res.status(200).json({ ok: true, message: "Year plan deleted" });
+  } else {
 
-  return res.status(200).json({ ok: false, });
+    return res.status(200).json({ ok: false, });
   }
 });
 
@@ -415,7 +415,7 @@ router.get("/get-exam/:id", async (req, res) => {
 });
 
 router.get("/get-exams", async (req, res) => {
-  const result = await Exam.find({ });
+  const result = await Exam.find({});
   return res.status(200).json({ ok: true, data: result });
 });
 
@@ -425,6 +425,7 @@ router.get("/get-assessment", async (req, res) => {
   return res.status(200).json({ ok: true, data: result });
 });
 router.get("/get-assessment/:id", async (req, res) => {
+  console.log(req.params)
   const result = await Assessment.findOne({ _id: req.params.id });
   return res.status(200).json({ ok: true, data: result });
 });
@@ -487,15 +488,15 @@ router.get("/get-teaching", async (req, res) => {
 
 router.get("/get-teaching/:id", async (req, res) => {
 
-  const result = await Teaching.find({series:req.params.id});
+  const result = await Teaching.find({ series: req.params.id });
 
   return res.status(200).json({ ok: true, data: result });
 });
 
-router.get("/get-school-stats/:id",async(req,res)=> {
-  const global = await Student.find({id:req.params.id}).where({standard:'63d2bc32c53e0b4b1188c468'}).count();
+router.get("/get-school-stats/:id", async (req, res) => {
+  const global = await Student.find({ id: req.params.id }).where({ standard: '63d2bc32c53e0b4b1188c468' }).count();
   const students = await Student.find().count();
-  return res.status(200).json({ok:true,global,students})
+  return res.status(200).json({ ok: true, global, students })
 
 })
 
@@ -552,7 +553,7 @@ router.get("/get-animation", async (req, res) => {
 });
 
 router.get("/get-animationById/:id", async (req, res) => {
-  const result = await Animation.find({series:req.params.id});
+  const result = await Animation.find({ series: req.params.id });
   return res.status(200).json({ ok: true, data: result });
 });
 

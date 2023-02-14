@@ -53,7 +53,7 @@ const SchoolSchema = new mongoose.Schema({
   pending:{type:Boolean,default:true},
   active:{
     type:Boolean,
-    default:false
+    default:true
   }
 });
 
